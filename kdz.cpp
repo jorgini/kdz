@@ -47,39 +47,46 @@ void first_task(std::mt19937& gen) {
 void dop_task(std::mt19937& gen) {
     std::uniform_int_distribution distr(INT_MIN, INT_MAX);
     std::vector<int> sizes = {1000, 5000, 10000, 50000, 100000, 500000, 1000000};
-    std::cout << "\t\tQSort\t\tQSortMeridians\tHeapSort\n";
+    std::cout << "\t\tQSort\t\tQSortMeridians\tHeapSort\tMergeSort\n";
     for (auto size : sizes) {
         int64_t avg_qsort = 0;
         int64_t avg_qsort_meridians = 0;
         int64_t avg_heapsort = 0;
-        for (int k = 0; k < 10; ++k) {
-            std::vector<int> a(size), b(size), c(size);
+        int64_t avg_mergesort = 0;
+        for (int k = 0; k < 50; ++k) {
+            std::vector<int> a(size), b(size), c(size), d(size);
             for (int i = 0; i < size; ++i) {
                 int t = distr(gen);
                 a[i] = t;
                 b[i] = t;
                 c[i] = t;
+                d[i] = t;
             }
 
             auto t1 = std::chrono::high_resolution_clock::now();
             quick_sort(a, 0, size, gen);
             auto t2 = std::chrono::high_resolution_clock::now();
-            avg_qsort += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / 10;
+            avg_qsort += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / 50;
 
             t1 = std::chrono::high_resolution_clock::now();
             quick_sort_nlogn(b, 0, size);
             t2 = std::chrono::high_resolution_clock::now();
-            avg_qsort_meridians += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / 10;
+            avg_qsort_meridians += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / 50;
 
             t1 = std::chrono::high_resolution_clock::now();
             heap_sort(c);
             t2 = std::chrono::high_resolution_clock::now();
-            avg_heapsort += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / 10;
+            avg_heapsort += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / 50;
+
+            t1 = std::chrono::high_resolution_clock::now();
+            merge_sort(d, 0, size);
+            t2 = std::chrono::high_resolution_clock::now();
+            avg_mergesort += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / 50;
         }
 
         std::cout << "n=" << size << (size >= 1e5 ? "\t" : "\t\t")<< "|"
                   << avg_qsort / 1e3 << "mcs\t|" << avg_qsort_meridians / 1e3 << "mcs\t|"
-                  << avg_heapsort / 1e3 << "mcs" << std::endl;
+                  << avg_heapsort / 1e3 << "mcs\t|" << avg_mergesort / 1e3 << "mcs" << std::endl;
     }
 }
 
@@ -122,14 +129,14 @@ void str_task(std::mt19937& gen) {
 }
 
 void rev_task(std::mt19937& gen) {
-    std::uniform_int_distribution distr(0, INT_MAX);
+    std::uniform_int_distribution distr(INT_MIN, INT_MAX);
     std::vector<int> sizes = {1000, 5000, 10000, 50000, 100000, 500000, 1000000};
     std::cout << "\t\tQSort\t\tQSortMeridians\tHeapSort\n";
     for (auto size : sizes) {
         int64_t avg_qsort = 0;
         int64_t avg_qsort_meridians = 0;
         int64_t avg_heapsort = 0;
-        for (int k = 0; k < 1; ++k) {
+        for (int k = 0; k < 2; ++k) {
             std::vector<int> a(size), b(size), c(size);
             int t = distr(gen);
             for (int i = 0; i < size; ++i) {
@@ -142,17 +149,17 @@ void rev_task(std::mt19937& gen) {
             auto t1 = std::chrono::high_resolution_clock::now();
             quick_sort(a, 0, size, gen);
             auto t2 = std::chrono::high_resolution_clock::now();
-            avg_qsort += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1;
+            avg_qsort += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 2;
 
             t1 = std::chrono::high_resolution_clock::now();
             quick_sort_nlogn(b, 0, size);
             t2 = std::chrono::high_resolution_clock::now();
-            avg_qsort_meridians += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1;
+            avg_qsort_meridians += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 2;
 
             t1 = std::chrono::high_resolution_clock::now();
             heap_sort(c);
             t2 = std::chrono::high_resolution_clock::now();
-            avg_heapsort += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1;
+            avg_heapsort += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 2;
         }
 
         std::cout << "n=" << size << (size >= 1e5 ? "\t" : "\t\t")<< "|"
@@ -163,11 +170,11 @@ void rev_task(std::mt19937& gen) {
 
 int main() {
     std::mt19937 gen(time(nullptr));
-    first_task(gen);
+    //first_task(gen);
     std::cout << "\n\n";
-    dop_task(gen);
+    //dop_task(gen);
     std::cout << "\n\n";
-    str_task(gen);
+    //str_task(gen);
     std::cout << "\n\n";
-    //rev_task(gen);
+    rev_task(gen);
 }
