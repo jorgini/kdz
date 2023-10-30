@@ -27,6 +27,8 @@ void quick_sort(std::vector<T>& in, int l, int r, std::mt19937& gen) {
 
         std::swap(in[i++], in[j--]);
     }
-    quick_sort(in, l, j + 1, gen);
-    quick_sort(in, j + 1, r, gen);
+    if (r - l > 2) {
+        quick_sort(in, l, j + 1, gen);
+        quick_sort(in, j + 1, r, gen);
+    }
 }
