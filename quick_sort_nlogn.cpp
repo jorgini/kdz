@@ -14,39 +14,37 @@ T get_pivot(std::vector<T>& in, int l, int r) {
         return in[(l + r) / 2];
     }
 
-    int k = 1;
-    while (5 * k < in.size()) {
-        for (int i = l + k / 2; i + 4 * k < r; i += 5 * k) {
-            if (in[i + 4 * k] < in[i])
-                std::swap(in[i + 4 * k], in[i]);
-            if (in[i + 3] < in[i + 1 * k])
-                std::swap(in[i + 3 * k], in[i + 1 * k]);
-            if (in[i + 1 * k] < in[i]) {
-                std::swap(in[i + 1 * k], in[i]);
-                std::swap(in[i + 4 * k], in[i + 3 * k]);
-            }
-            if (in[i + 2 * k] < in[i + 1 * k]) {
-                T x = in[i + 2 * k];
-                in[i + 2 * k] = in[i + 1 * k];
-                if (x < in[i])
-                    std::swap(x, in[i]);
-                in[i + 1 * k] = x;
-            } else if (in[i + 3 * k] < in[i + 2 * k])
-                std::swap(in[i + 3 * k], in[i + 2 * k]);
-            if (in[i + 4 * k] < in[i + 2 * k]) {
-                T x = in[i + 4 * k];
-                in[i + 4 * k] = in[i + 3 * k];
-                in[i + 3 * k] = in[i + 2 * k];
-                if (x < in[i + 1 * k]) {
-                    in[i + 2 * k] = in[i + 1 * k];
-                    in[i + 1 * k] = x;
-                } else
-                    in[i + 2 * k] = x;
-            } else if (in[i + 4 * k] < in[i + 3 * k])
-                std::swap(in[i + 4 * k], in[i + 3 * k]);
+
+    for (int i = l; i + 4 < r; i += 5) {
+        if (in[i + 4] < in[i])
+            std::swap(in[i + 4], in[i]);
+        if (in[i + 3] < in[i + 1])
+            std::swap(in[i + 3], in[i + 1]);
+        if (in[i + 1] < in[i]) {
+            std::swap(in[i + 1], in[i]);
+            std::swap(in[i + 4], in[i + 3]);
         }
-        k *= 5;
+        if (in[i + 2] < in[i + 1]) {
+            T x = in[i + 2];
+            in[i + 2] = in[i + 1];
+            if (x < in[i])
+                std::swap(x, in[i]);
+            in[i + 1] = x;
+        } else if (in[i + 3] < in[i + 2])
+            std::swap(in[i + 3], in[i + 2]);
+        if (in[i + 4] < in[i + 2]) {
+            T x = in[i + 4];
+            in[i + 4] = in[i + 3];
+            in[i + 3] = in[i + 2];
+            if (x < in[i + 1]) {
+                in[i + 2] = in[i + 1];
+                in[i + 1] = x;
+            } else
+                in[i + 2] = x;
+        } else if (in[i + 4] < in[i + 3])
+            std::swap(in[i + 4], in[i + 3]);
     }
+
     return in[l + 2 + 5 * (((r - l) / 5) / 2)];
 }
 
